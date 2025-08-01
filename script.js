@@ -146,6 +146,7 @@ if (contactForm) {
                     subject: subject,
                     message: message,
                     to_name: 'Dina Abdelaziz',
+                    to_email: 'dinaabdelaziz514@gmail.com',
                     site_url: window.location.href
                 };
                 
@@ -162,6 +163,18 @@ if (contactForm) {
                         submitBtn.disabled = false;
                     }, function(error) {
                         console.log('❌ Email sending failed:', error);
+                        console.log('📧 Error details:', {
+                            status: error.status,
+                            text: error.text,
+                            message: error.message
+                        });
+                        
+                        if (error.text && error.text.includes('recipients address is empty')) {
+                            showNotification('EmailJS template needs recipient configuration. Check your EmailJS dashboard.', 'error');
+                        } else {
+                            showNotification('Email sending failed. Please try again or contact me directly.', 'error');
+                        }
+                        
                         console.log('📧 Falling back to simulation mode');
                         // Fallback to simulation
                         setTimeout(() => {
