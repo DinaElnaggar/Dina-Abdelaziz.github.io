@@ -487,11 +487,9 @@ backToTopBtn.addEventListener('mouseleave', () => {
 
 // Enhanced animations and interactions
 function initializeAnimations() {
-    console.log('🎬 Initializing animations...');
     
     // Add loading class to elements that need animation
     const elementsToAnimate = document.querySelectorAll('.skill-category, .project-card, .timeline-content, .education-card, .languages-card, .contact-item, .stat');
-    console.log(`📊 Found ${elementsToAnimate.length} elements to animate`);
     
     elementsToAnimate.forEach(el => {
         el.classList.add('loading');
@@ -502,7 +500,6 @@ function initializeAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('loaded');
-                console.log('✨ Element animated:', entry.target.className);
             }
         });
     }, { threshold: 0.1 });
@@ -514,7 +511,6 @@ function initializeAnimations() {
     // Add typing effect to hero title
     const heroTitle = document.querySelector('.hero-title');
     if (heroTitle) {
-        console.log('⌨️ Starting typing animation...');
         const text = heroTitle.textContent;
         heroTitle.textContent = '';
         let i = 0;
@@ -540,7 +536,6 @@ function initializeAnimations() {
     // Add hover effects
     addHoverEffects();
     
-    console.log('✅ Animations initialized successfully');
 }
 
 // Initialize when DOM is ready
@@ -553,7 +548,6 @@ if (document.readyState === 'loading') {
 
 // Also initialize on window load to ensure everything is ready
 window.addEventListener('load', () => {
-    console.log('🔄 Window loaded, re-initializing animations...');
     initializeAnimations();
 });
 
