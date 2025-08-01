@@ -145,6 +145,7 @@ if (contactForm) {
                     message: message,
                     to_name: 'Dina Abdelaziz',
                     to_email: 'dinaabdelaziz514@gmail.com',
+                    reply_to: email,
                     site_url: window.location.href
                 };
                 
@@ -157,8 +158,15 @@ if (contactForm) {
                         submitBtn.disabled = false;
                     }, function(error) {
                         console.log('❌ EmailJS failed:', error.text);
-                        // Fallback: show error but still reset form
-                        showNotification('Message sent! (EmailJS error but form processed)', 'success');
+                        console.log('📧 Full error details:', error);
+                        
+                        if (error.text && error.text.includes('recipients address is empty')) {
+                            showNotification('EmailJS template needs recipient configuration. Please check your EmailJS dashboard.', 'error');
+                        } else {
+                            showNotification('Email sending failed. Please try again.', 'error');
+                        }
+                        
+                        // Still reset form for better UX
                         contactForm.reset();
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
