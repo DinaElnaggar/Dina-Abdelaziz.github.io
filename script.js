@@ -118,31 +118,11 @@ if (contactForm) {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
-        // Enhanced email handling for live site
-        console.log('📧 Form Data Captured:', {
-            name: name,
-            email: email,
-            subject: subject,
-            message: message,
-            timestamp: new Date().toISOString(),
-            site: window.location.hostname
-        });
         
-        // Simple email solution that actually works
-        console.log('📧 Processing contact form...');
-        
+
         // Show success message immediately
         showNotification('Thank you! Your message has been sent to my inbox.', 'success');
-        
-        // Log the email details for you to see
-        console.log('📧 Email Details:', {
-            to: 'dinaabdelaziz514@gmail.com',
-            from: email,
-            subject: subject,
-            message: message,
-            timestamp: new Date().toISOString()
-        });
-        
+             
         // Reset form
         contactForm.reset();
         submitBtn.textContent = originalText;
@@ -150,7 +130,6 @@ if (contactForm) {
         
         // Try EmailJS in background (optional)
         if (typeof emailjs !== 'undefined') {
-            console.log('🔍 Attempting EmailJS in background...');
             try {
                 emailjs.init("0hXIeGG4Xh9uxvPEq");
                 const templateParams = {
@@ -164,21 +143,9 @@ if (contactForm) {
                     site_url: window.location.href
                 };
                 
-                emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams)
-                    .then(function(response) {
-                        console.log('✅ Background EmailJS success:', response);
-                    }, function(error) {
-                        console.log('❌ Background EmailJS failed:', error.text);
-                        console.log('📧 Template Parameters sent:', templateParams);
-                        
-                        if (error.text && error.text.includes('recipients address is empty')) {
-                            console.log('🔧 SOLUTION: Go to your EmailJS template and add this line at the top:');
-                            console.log('To: dinaabdelaziz514@gmail.com');
-                            console.log('Or use: To: {{user_email}}');
-                        }
-                    });
+                emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams);
             } catch (error) {
-                console.log('❌ Background EmailJS error:', error);
+               // console.log('❌ Background EmailJS error:', error);
             }
         }
         
