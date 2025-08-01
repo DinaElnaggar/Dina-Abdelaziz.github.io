@@ -128,11 +128,16 @@ if (contactForm) {
             site: window.location.hostname
         });
         
-        // Try to send email using EmailJS if configured
-        if (typeof emailjs !== 'undefined' && emailjs.init) {
+        // Email handling with better error detection
+        console.log('🔍 Checking EmailJS availability...');
+        
+        if (typeof emailjs !== 'undefined') {
+            console.log('✅ EmailJS is loaded');
+            
             try {
-                // Initialize EmailJS with your public key
+                // Initialize EmailJS
                 emailjs.init("0hXIeGG4Xh9uxvPEq");
+                console.log('✅ EmailJS initialized');
                 
                 // Prepare template parameters
                 const templateParams = {
@@ -143,6 +148,8 @@ if (contactForm) {
                     to_name: 'Dina Abdelaziz',
                     site_url: window.location.href
                 };
+                
+                console.log('📤 Attempting to send email...');
                 
                 // Send email using EmailJS
                 // Note: You need to replace these with your actual Service ID and Template ID
@@ -155,6 +162,7 @@ if (contactForm) {
                         submitBtn.disabled = false;
                     }, function(error) {
                         console.log('❌ Email sending failed:', error);
+                        console.log('📧 Falling back to simulation mode');
                         // Fallback to simulation
                         setTimeout(() => {
                             console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
@@ -167,6 +175,7 @@ if (contactForm) {
                     
             } catch (error) {
                 console.log('❌ EmailJS Error:', error);
+                console.log('📧 Falling back to simulation mode');
                 // Fallback to simulation
                 setTimeout(() => {
                     console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
@@ -177,14 +186,21 @@ if (contactForm) {
                 }, 2000);
             }
         } else {
-            // EmailJS not available, use simulation
+            console.log('❌ EmailJS not loaded, using simulation mode');
+            
+            // Create a mailto link as a fallback
+            const mailtoLink = `mailto:dinaabdelaziz514@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+            
+            // Show notification with option to open email client
+            showNotification('Opening your email client to send the message...', 'success');
+            
+            // Open email client
             setTimeout(() => {
-                console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
-                showNotification('Thank you for your message! I will get back to you soon.', 'success');
+                window.open(mailtoLink, '_blank');
                 contactForm.reset();
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
-            }, 2000);
+            }, 1000);
         }
         
         // TODO: Uncomment and configure this when EmailJS is set up
@@ -497,9 +513,13 @@ backToTopBtn.addEventListener('mouseleave', () => {
 });
 
 // Enhanced animations and interactions
-document.addEventListener('DOMContentLoaded', () => {
+function initializeAnimations() {
+    console.log('🎬 Initializing animations...');
+    
     // Add loading class to elements that need animation
     const elementsToAnimate = document.querySelectorAll('.skill-category, .project-card, .timeline-content, .education-card, .languages-card, .contact-item, .stat');
+    console.log(`📊 Found ${elementsToAnimate.length} elements to animate`);
+    
     elementsToAnimate.forEach(el => {
         el.classList.add('loading');
     });
@@ -509,6 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('loaded');
+                console.log('✨ Element animated:', entry.target.className);
             }
         });
     }, { threshold: 0.1 });
@@ -520,6 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add typing effect to hero title
     const heroTitle = document.querySelector('.hero-title');
     if (heroTitle) {
+        console.log('⌨️ Starting typing animation...');
         const text = heroTitle.textContent;
         heroTitle.textContent = '';
         let i = 0;
@@ -542,8 +564,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add scroll-triggered animations
     addScrollAnimations();
     
-    // Add hover sound effects (optional)
+    // Add hover effects
     addHoverEffects();
+    
+    console.log('✅ Animations initialized successfully');
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeAnimations);
+} else {
+    // DOM is already loaded
+    initializeAnimations();
+}
+
+// Also initialize on window load to ensure everything is ready
+window.addEventListener('load', () => {
+    console.log('🔄 Window loaded, re-initializing animations...');
+    initializeAnimations();
 });
 
 // Create floating particles in hero section
