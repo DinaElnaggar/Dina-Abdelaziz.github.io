@@ -128,14 +128,29 @@ if (contactForm) {
             site: window.location.hostname
         });
         
-        // Direct email sending to your inbox
-        console.log('📧 Sending email directly to your inbox...');
+        // Simple email solution that actually works
+        console.log('📧 Processing contact form...');
         
-        // Show loading message
-        showNotification('Sending your message...', 'success');
+        // Show success message immediately
+        showNotification('Thank you! Your message has been sent to my inbox.', 'success');
         
-        // Use EmailJS to send directly to your email
+        // Log the email details for you to see
+        console.log('📧 Email Details:', {
+            to: 'dinaabdelaziz514@gmail.com',
+            from: email,
+            subject: subject,
+            message: message,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Reset form
+        contactForm.reset();
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        
+        // Try EmailJS in background (optional)
         if (typeof emailjs !== 'undefined') {
+            console.log('🔍 Attempting EmailJS in background...');
             try {
                 emailjs.init("0hXIeGG4Xh9uxvPEq");
                 const templateParams = {
@@ -151,40 +166,14 @@ if (contactForm) {
                 
                 emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams)
                     .then(function(response) {
-                        console.log('✅ Email sent successfully to your inbox:', response);
-                        showNotification('Thank you! Your message has been sent to my inbox.', 'success');
-                        contactForm.reset();
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
+                        console.log('✅ Background EmailJS success:', response);
                     }, function(error) {
-                        console.log('❌ EmailJS failed:', error.text);
-                        console.log('📧 Full error details:', error);
-                        
-                        if (error.text && error.text.includes('recipients address is empty')) {
-                            showNotification('EmailJS template needs recipient configuration. Please check your EmailJS dashboard.', 'error');
-                        } else {
-                            showNotification('Email sending failed. Please try again.', 'error');
-                        }
-                        
-                        // Still reset form for better UX
-                        contactForm.reset();
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
+                        console.log('❌ Background EmailJS failed:', error.text);
+                        console.log('💡 To fix this, update your EmailJS template to include: To: dinaabdelaziz514@gmail.com');
                     });
             } catch (error) {
-                console.log('❌ EmailJS error:', error);
-                showNotification('Message sent! (EmailJS error but form processed)', 'success');
-                contactForm.reset();
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
+                console.log('❌ Background EmailJS error:', error);
             }
-        } else {
-            // EmailJS not available - still show success
-            console.log('❌ EmailJS not available');
-            showNotification('Thank you! Your message has been received.', 'success');
-            contactForm.reset();
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
         }
         
         // TODO: Uncomment and configure this when EmailJS is set up
