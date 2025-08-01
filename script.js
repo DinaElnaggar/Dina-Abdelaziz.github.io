@@ -446,10 +446,10 @@ backToTopBtn.addEventListener('mouseleave', () => {
     backToTopBtn.style.transform = 'scale(1)';
 });
 
-// Initialize all animations when DOM is loaded
+// Enhanced animations and interactions
 document.addEventListener('DOMContentLoaded', () => {
     // Add loading class to elements that need animation
-    const elementsToAnimate = document.querySelectorAll('.skill-category, .project-card, .timeline-content, .education-card, .languages-card');
+    const elementsToAnimate = document.querySelectorAll('.skill-category, .project-card, .timeline-content, .education-card, .languages-card, .contact-item, .stat');
     elementsToAnimate.forEach(el => {
         el.classList.add('loading');
     });
@@ -466,4 +466,230 @@ document.addEventListener('DOMContentLoaded', () => {
     elementsToAnimate.forEach(el => {
         animationObserver.observe(el);
     });
-}); 
+    
+    // Add typing effect to hero title
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        const text = heroTitle.textContent;
+        heroTitle.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                heroTitle.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeWriter, 500);
+    }
+    
+    // Add particle effect to hero section
+    createParticles();
+    
+    // Add scroll-triggered animations
+    addScrollAnimations();
+    
+    // Add hover sound effects (optional)
+    addHoverEffects();
+});
+
+// Create floating particles in hero section
+function createParticles() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            animation-delay: ${Math.random() * 2}s;
+        `;
+        hero.appendChild(particle);
+    }
+}
+
+// Add scroll-triggered animations
+function addScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all animated elements
+    const animatedElements = document.querySelectorAll('.skill-category, .project-card, .timeline-content, .education-card, .languages-card, .contact-item');
+    animatedElements.forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Add hover effects and interactions
+function addHoverEffects() {
+    // Add ripple effect to buttons
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+            `;
+            
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+    
+    // Add tilt effect to project cards
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-15px) scale(1.02)`;
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+        });
+    });
+    
+    // Add glow effect to skill items
+    const skillItems = document.querySelectorAll('.skill-item');
+    skillItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 0 20px rgba(147, 197, 253, 0.5)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.boxShadow = '';
+        });
+    });
+}
+
+// Add CSS for new animations
+const additionalStyles = document.createElement('style');
+additionalStyles.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    
+    .particle {
+        z-index: 1;
+    }
+    
+    .hero {
+        overflow: hidden;
+    }
+    
+    /* Smooth transitions for all interactive elements */
+    * {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    /* Enhanced focus states */
+    .btn:focus,
+    .nav-link:focus,
+    input:focus,
+    textarea:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+    
+    /* Loading animation for images */
+    .project-image {
+        position: relative;
+    }
+    
+    .project-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    /* Pulse animation for important elements */
+    .hero-buttons .btn:first-child {
+        animation: pulse 2s infinite;
+    }
+    
+    /* Floating animation for profile card */
+    .profile-card {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Staggered entrance animations */
+    .skill-category:nth-child(1) { animation-delay: 0.1s; }
+    .skill-category:nth-child(2) { animation-delay: 0.2s; }
+    .skill-category:nth-child(3) { animation-delay: 0.3s; }
+    .skill-category:nth-child(4) { animation-delay: 0.4s; }
+    .skill-category:nth-child(5) { animation-delay: 0.5s; }
+    .skill-category:nth-child(6) { animation-delay: 0.6s; }
+    .skill-category:nth-child(7) { animation-delay: 0.7s; }
+    .skill-category:nth-child(8) { animation-delay: 0.8s; }
+    .skill-category:nth-child(9) { animation-delay: 0.9s; }
+    
+    /* Hover effects for timeline */
+    .timeline-item:hover .timeline-content {
+        transform: translateY(-8px) scale(1.02);
+    }
+    
+    /* Animated background for hero */
+    .hero::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+        animation: shimmer 3s infinite;
+        pointer-events: none;
+    }
+`;
+document.head.appendChild(additionalStyles); 

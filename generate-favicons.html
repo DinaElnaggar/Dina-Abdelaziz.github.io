@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Favicons</title>
+</head>
+<body>
+    <h1>Favicon Generator</h1>
+    <p>This will generate PNG favicon files from the SVG.</p>
+    
+    <canvas id="canvas16" width="16" height="16" style="border: 1px solid #ccc;"></canvas>
+    <canvas id="canvas32" width="32" height="32" style="border: 1px solid #ccc;"></canvas>
+    <canvas id="canvas180" width="180" height="180" style="border: 1px solid #ccc;"></canvas>
+    
+    <br><br>
+    <button onclick="generateFavicons()">Generate Favicons</button>
+    
+    <script>
+        function generateFavicons() {
+            const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#93c5fd;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#bae6fd;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                
+                <circle cx="16" cy="16" r="15" fill="url(#grad1)" stroke="#6b7280" stroke-width="1"/>
+                <text x="16" y="20" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle" fill="white">&lt;/&gt;</text>
+                <circle cx="8" cy="8" r="1" fill="white" opacity="0.7"/>
+                <circle cx="24" cy="8" r="1" fill="white" opacity="0.7"/>
+                <circle cx="8" cy="24" r="1" fill="white" opacity="0.7"/>
+                <circle cx="24" cy="24" r="1" fill="white" opacity="0.7"/>
+            </svg>`;
+            
+            const canvas16 = document.getElementById('canvas16');
+            const canvas32 = document.getElementById('canvas32');
+            const canvas180 = document.getElementById('canvas180');
+            
+            const ctx16 = canvas16.getContext('2d');
+            const ctx32 = canvas32.getContext('2d');
+            const ctx180 = canvas180.getContext('2d');
+            
+            const img = new Image();
+            img.onload = function() {
+                // Draw 16x16
+                ctx16.drawImage(img, 0, 0, 16, 16);
+                
+                // Draw 32x32
+                ctx32.drawImage(img, 0, 0, 32, 32);
+                
+                // Draw 180x180
+                ctx180.drawImage(img, 0, 0, 180, 180);
+                
+                // Convert to data URLs
+                const data16 = canvas16.toDataURL('image/png');
+                const data32 = canvas32.toDataURL('image/png');
+                const data180 = canvas180.toDataURL('image/png');
+                
+                // Create download links
+                const link16 = document.createElement('a');
+                link16.download = 'favicon-16x16.png';
+                link16.href = data16;
+                link16.click();
+                
+                const link32 = document.createElement('a');
+                link32.download = 'favicon-32x32.png';
+                link32.href = data32;
+                link32.click();
+                
+                const link180 = document.createElement('a');
+                link180.download = 'apple-touch-icon.png';
+                link180.href = data180;
+                link180.click();
+                
+                alert('Favicon files generated! Check your downloads folder.');
+            };
+            
+            const svgBlob = new Blob([svgString], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(svgBlob);
+            img.src = url;
+        }
+    </script>
+</body>
+</html> 
