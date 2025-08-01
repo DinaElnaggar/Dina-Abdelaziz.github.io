@@ -6,11 +6,11 @@
 }
 
 :root {
-    /* Baby Blue & Grey Color Palette */
-    --primary-color: #93c5fd;
-    --primary-dark: #7dd3fc;
-    --secondary-color: #bae6fd;
-    --accent-color: #6b7280;
+    /* Darker Baby Blue & Grey Color Palette */
+    --primary-color: #3b82f6;
+    --primary-dark: #2563eb;
+    --secondary-color: #60a5fa;
+    --accent-color: #4b5563;
     --text-primary: #1e293b;
     --text-secondary: #475569;
     --text-light: #64748b;
@@ -22,8 +22,8 @@
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    --gradient-primary: linear-gradient(135deg, #93c5fd 0%, #bae6fd 100%);
-    --gradient-secondary: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    --gradient-secondary: linear-gradient(135deg, #4b5563 0%, #374151 100%);
 }
 
 body {
