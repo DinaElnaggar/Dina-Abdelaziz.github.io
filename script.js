@@ -133,20 +133,44 @@ if (contactForm) {
             try {
                 emailjs.init("0hXIeGG4Xh9uxvPEq");
                 const templateParams = {
-                    name: name,
-                    email: email,
+                    from_name: name,
+                    from_email: email,
                     subject: subject,
                     message: message,
                     to_name: 'Dina Abdelaziz',
-                    to_email: 'dinaabdelaziz514@gmail.com',
+                    email: 'dinaabdelaziz514@gmail.com',
                     reply_to: email,
                     site_url: window.location.href
                 };
                 
-                emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams);
+                
+                // Send email using EmailJS
+                emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams)
+                    .then(function(response) {
+                        showNotification('Thank you! Your message has been sent successfully.', 'success');
+                        contactForm.reset();
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }, function(error) {
+                        
+                        // Show error message to user
+                        showNotification('Sorry, there was an error sending your message. Please try again or contact me directly.', 'error');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        
+            
+                    });
+                    
             } catch (error) {
-               // console.log('❌ Background EmailJS error:', error);
+                showNotification('Email service error. Please try again later.', 'error');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
+        } else {
+            // EmailJS not loaded
+            showNotification('Email service not available. Please try again later.', 'error');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
         
         // TODO: Uncomment and configure this when EmailJS is set up
