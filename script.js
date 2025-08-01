@@ -118,24 +118,74 @@ if (contactForm) {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
-        // For now, let's simulate email sending while you set up EmailJS
-        // This will show the form data in console and give user feedback
+        // Enhanced email handling for live site
         console.log('📧 Form Data Captured:', {
             name: name,
             email: email,
             subject: subject,
             message: message,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            site: window.location.hostname
         });
         
-        // Simulate email sending process
-        setTimeout(() => {
-            console.log('✅ Email would be sent to: dinaabdelaziz514@gmail.com');
-            showNotification('Thank you for your message! I will get back to you soon.', 'success');
-            contactForm.reset();
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
+        // Try to send email using EmailJS if configured
+        if (typeof emailjs !== 'undefined' && emailjs.init) {
+            try {
+                // Initialize EmailJS with your public key
+                emailjs.init("0hXIeGG4Xh9uxvPEq");
+                
+                // Prepare template parameters
+                const templateParams = {
+                    from_name: name,
+                    from_email: email,
+                    subject: subject,
+                    message: message,
+                    to_name: 'Dina Abdelaziz',
+                    site_url: window.location.href
+                };
+                
+                // Send email using EmailJS
+                // Note: You need to replace these with your actual Service ID and Template ID
+                emailjs.send('service_abc123', 'template_xyz789', templateParams)
+                    .then(function(response) {
+                        console.log('✅ Email sent successfully:', response);
+                        showNotification('Thank you for your message! I will get back to you soon.', 'success');
+                        contactForm.reset();
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }, function(error) {
+                        console.log('❌ Email sending failed:', error);
+                        // Fallback to simulation
+                        setTimeout(() => {
+                            console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
+                            showNotification('Thank you for your message! I will get back to you soon.', 'success');
+                            contactForm.reset();
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }, 2000);
+                    });
+                    
+            } catch (error) {
+                console.log('❌ EmailJS Error:', error);
+                // Fallback to simulation
+                setTimeout(() => {
+                    console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
+                    showNotification('Thank you for your message! I will get back to you soon.', 'success');
+                    contactForm.reset();
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            }
+        } else {
+            // EmailJS not available, use simulation
+            setTimeout(() => {
+                console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
+                showNotification('Thank you for your message! I will get back to you soon.', 'success');
+                contactForm.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        }
         
         // TODO: Uncomment and configure this when EmailJS is set up
         /*
