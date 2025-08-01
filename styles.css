@@ -138,14 +138,47 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.hamburger:hover {
+    background: rgba(59, 130, 246, 0.1);
+    transform: scale(1.05);
+}
+
+.hamburger:active {
+    transform: scale(0.95);
 }
 
 .bar {
-    width: 25px;
+    width: 28px;
     height: 3px;
-    background: var(--text-primary);
-    margin: 3px 0;
-    transition: 0.3s;
+    background: var(--primary-color);
+    margin: 4px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+    transform-origin: center;
+}
+
+/* Hamburger animation when active */
+.hamburger.active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+    background: var(--primary-color);
+}
+
+.hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.hamburger.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+    background: var(--primary-color);
 }
 
 /* Hero Section */
@@ -809,16 +842,63 @@ h1, h2, h3, h4, h5, h6 {
         left: -100%;
         top: 70px;
         flex-direction: column;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
         width: 100%;
         text-align: center;
-        transition: 0.3s;
-        box-shadow: var(--shadow-md);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-lg);
         padding: 2rem 0;
+        border-bottom: 1px solid var(--border-color);
     }
 
     .nav-menu.active {
         left: 0;
+    }
+    
+    .nav-menu .nav-link {
+        padding: 1rem 2rem;
+        margin: 0.5rem 0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nav-menu .nav-link:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary-color);
+        transform: translateX(5px);
+    }
+    
+    .nav-menu .nav-link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 100%;
+        background: var(--gradient-primary);
+        transition: width 0.3s ease;
+        z-index: -1;
+    }
+    
+    .nav-menu .nav-link:hover::before {
+        width: 100%;
+    }
+    
+    /* Staggered animation for mobile menu items */
+    .nav-menu .nav-link:nth-child(1) { animation-delay: 0.1s; }
+    .nav-menu .nav-link:nth-child(2) { animation-delay: 0.2s; }
+    .nav-menu .nav-link:nth-child(3) { animation-delay: 0.3s; }
+    .nav-menu .nav-link:nth-child(4) { animation-delay: 0.4s; }
+    .nav-menu .nav-link:nth-child(5) { animation-delay: 0.5s; }
+    
+    .nav-menu.active .nav-link {
+        animation: slideInFromTop 0.5s ease-out forwards;
+        opacity: 0;
+        transform: translateY(-20px);
     }
 
     .hero-container {
@@ -905,6 +985,113 @@ h1, h2, h3, h4, h5, h6 {
     .project-features,
     .project-tech {
         flex-direction: column;
+    }
+    
+    /* Hamburger improvements for small screens */
+    .hamburger {
+        padding: 6px;
+    }
+    
+    .bar {
+        width: 24px;
+        height: 2.5px;
+        margin: 3px 0;
+    }
+    
+    .hamburger.active .bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .hamburger.active .bar:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+}
+
+/* Additional responsive breakpoints for better header handling */
+@media (max-width: 1024px) {
+    .hero-container {
+        gap: 3rem;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        padding: 0.5rem 0; /* Even smaller padding for medium-small screens */
+    }
+    
+    .nav-menu {
+        top: 55px; /* Adjust top position to match reduced navbar height */
+    }
+    
+    .hamburger {
+        padding: 6px;
+    }
+    
+    .bar {
+        width: 24px;
+        height: 2.5px;
+        margin: 3px 0;
+    }
+    
+    .hero {
+        padding-top: 65px;
+    }
+    
+    .hero-container {
+        padding-top: 1.5rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .hero {
+        padding-top: 60px; /* Minimal padding for very small screens */
+    }
+    
+    .hero-container {
+        padding-top: 0.5rem;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .hamburger {
+        padding: 5px;
+    }
+    
+    .bar {
+        width: 22px;
+        height: 2px;
+        margin: 2.5px 0;
+    }
+}
+
+/* Handle landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        padding-top: 60px; /* Reduced padding for landscape */
+        min-height: 80vh; /* Smaller height for landscape */
+    }
+    
+    .hero-container {
+        padding-top: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
     }
 }
 
