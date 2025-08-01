@@ -161,7 +161,8 @@ if (contactForm) {
                     to_name: 'Dina Abdelaziz',
                     to_email: 'dinaabdelaziz514@gmail.com',
                     reply_to: email,
-                    site_url: window.location.href
+                    site_url: window.location.href,
+                    user_email: 'dinaabdelaziz514@gmail.com'  // Add this line
                 };
                 
                 emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams)
@@ -169,7 +170,13 @@ if (contactForm) {
                         console.log('✅ Background EmailJS success:', response);
                     }, function(error) {
                         console.log('❌ Background EmailJS failed:', error.text);
-                        console.log('💡 To fix this, update your EmailJS template to include: To: dinaabdelaziz514@gmail.com');
+                        console.log('📧 Template Parameters sent:', templateParams);
+                        
+                        if (error.text && error.text.includes('recipients address is empty')) {
+                            console.log('🔧 SOLUTION: Go to your EmailJS template and add this line at the top:');
+                            console.log('To: dinaabdelaziz514@gmail.com');
+                            console.log('Or use: To: {{user_email}}');
+                        }
                     });
             } catch (error) {
                 console.log('❌ Background EmailJS error:', error);
