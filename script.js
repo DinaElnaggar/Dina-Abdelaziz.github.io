@@ -153,7 +153,7 @@ if (contactForm) {
                 
                 // Send email using EmailJS
                 // Note: You need to replace these with your actual Service ID and Template ID
-                emailjs.send('service_abc123', 'template_xyz789', templateParams)
+                emailjs.send('service_bsl9abn', 'template_xyz789', templateParams)
                     .then(function(response) {
                         console.log('✅ Email sent successfully:', response);
                         showNotification('Thank you for your message! I will get back to you soon.', 'success');
