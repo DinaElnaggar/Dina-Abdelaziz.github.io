@@ -154,15 +154,14 @@ if (contactForm) {
             try {
                 emailjs.init("0hXIeGG4Xh9uxvPEq");
                 const templateParams = {
-                    from_name: name,
-                    from_email: email,
+                    name: name,
+                    email: email,
                     subject: subject,
                     message: message,
                     to_name: 'Dina Abdelaziz',
                     to_email: 'dinaabdelaziz514@gmail.com',
                     reply_to: email,
-                    site_url: window.location.href,
-                    user_email: 'dinaabdelaziz514@gmail.com'  // Add this line
+                    site_url: window.location.href
                 };
                 
                 emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams)
