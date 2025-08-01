@@ -128,18 +128,29 @@ if (contactForm) {
             site: window.location.hostname
         });
         
-        // Email handling with better error detection
-        console.log('🔍 Checking EmailJS availability...');
+        // Enhanced email handling with working fallback
+        console.log('📧 Processing contact form submission...');
         
+        // Always use the working mailto solution for now
+        const mailtoLink = `mailto:dinaabdelaziz514@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+        
+        // Show success message
+        showNotification('Opening your email client to send the message...', 'success');
+        
+        // Open email client with pre-filled message
+        setTimeout(() => {
+            window.open(mailtoLink, '_blank');
+            contactForm.reset();
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            console.log('✅ Email client opened with pre-filled message');
+        }, 1000);
+        
+        // Optional: Try EmailJS in background (for future use)
         if (typeof emailjs !== 'undefined') {
-            console.log('✅ EmailJS is loaded');
-            
+            console.log('🔍 EmailJS available - attempting background send...');
             try {
-                // Initialize EmailJS
                 emailjs.init("0hXIeGG4Xh9uxvPEq");
-                console.log('✅ EmailJS initialized');
-                
-                // Prepare template parameters
                 const templateParams = {
                     from_name: name,
                     from_email: email,
@@ -150,70 +161,15 @@ if (contactForm) {
                     site_url: window.location.href
                 };
                 
-                console.log('📤 Attempting to send email...');
-                
-                // Send email using EmailJS
-                // Note: You need to replace these with your actual Service ID and Template ID
                 emailjs.send('service_bsl9abn', 'template_9zxlzjr', templateParams)
                     .then(function(response) {
-                        console.log('✅ Email sent successfully:', response);
-                        showNotification('Thank you for your message! I will get back to you soon.', 'success');
-                        contactForm.reset();
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
+                        console.log('✅ Background email sent successfully:', response);
                     }, function(error) {
-                        console.log('❌ Email sending failed:', error);
-                        console.log('📧 Error details:', {
-                            status: error.status,
-                            text: error.text,
-                            message: error.message
-                        });
-                        
-                        if (error.text && error.text.includes('recipients address is empty')) {
-                            showNotification('EmailJS template needs recipient configuration. Check your EmailJS dashboard.', 'error');
-                        } else {
-                            showNotification('Email sending failed. Please try again or contact me directly.', 'error');
-                        }
-                        
-                        console.log('📧 Falling back to simulation mode');
-                        // Fallback to simulation
-                        setTimeout(() => {
-                            console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
-                            showNotification('Thank you for your message! I will get back to you soon.', 'success');
-                            contactForm.reset();
-                            submitBtn.textContent = originalText;
-                            submitBtn.disabled = false;
-                        }, 2000);
+                        console.log('❌ Background email failed:', error.text);
                     });
-                    
             } catch (error) {
-                console.log('❌ EmailJS Error:', error);
-                console.log('📧 Falling back to simulation mode');
-                // Fallback to simulation
-                setTimeout(() => {
-                    console.log('📧 Email simulation: Message would be sent to dinaabdelaziz514@gmail.com');
-                    showNotification('Thank you for your message! I will get back to you soon.', 'success');
-                    contactForm.reset();
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }, 2000);
+                console.log('❌ Background EmailJS error:', error);
             }
-        } else {
-            console.log('❌ EmailJS not loaded, using simulation mode');
-            
-            // Create a mailto link as a fallback
-            const mailtoLink = `mailto:dinaabdelaziz514@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
-            
-            // Show notification with option to open email client
-            showNotification('Opening your email client to send the message...', 'success');
-            
-            // Open email client
-            setTimeout(() => {
-                window.open(mailtoLink, '_blank');
-                contactForm.reset();
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }, 1000);
         }
         
         // TODO: Uncomment and configure this when EmailJS is set up
